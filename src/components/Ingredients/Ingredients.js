@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import IngredientForm from "./IngredientForm";
 import Search from "./Search";
@@ -6,6 +6,25 @@ import IngredientList from "./IngredientList";
 
 const Ingredients = () => {
   const [userIngredients, setUserIngredients] = useState([]);
+
+  useEffect(() => {
+    fetch("https://react-hook-update-6a174.firebaseio.com/ingredients.json")
+      .then((response) => {
+        return response.json();
+      })
+      .then((responseData) => {
+        const loadedIngredients = [];
+        for (const key in responseData) {
+          debugger;
+          loadedIngredients.push({
+            id: key,
+            title: responseData[key].title,
+            amount: responseData[key].amount,
+          });
+        }
+        setUserIngredients(loadedIngredients);
+      });
+  }, []);
 
   const addIngredientHandler = (ingredient) => {
     fetch("https://react-hook-update-6a174.firebaseio.com/ingredients.json", {
